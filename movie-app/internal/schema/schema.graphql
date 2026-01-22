@@ -1,0 +1,120 @@
+type Movie {
+  id: ID!
+  title: String!
+  description: String
+  year: Int!
+  rating: Float!
+  duration: Int!
+  genre: String
+  director: String
+  poster_url: String
+  created_at: String!
+  updated_at: String!
+  actors: [Actor!]
+  reviews: [Review!]
+}
+ 
+type Actor {
+  id: ID!
+  name: String!
+  birth_date: String
+  nationality: String
+  biography: String
+  profile_url: String
+}
+
+type Review {
+  id: ID!
+  movie_id: ID!
+  user_name: String!
+  rating: Int!
+  comment: String
+  created_at: String!
+}
+
+type PaginationInfo {
+  page: Int!
+  limit: Int!
+  total: Int!
+  total_pages: Int!
+}
+
+type MoviesResult {
+  movies: [Movie!]!
+  pagination: PaginationInfo!
+}
+
+input MovieInput {
+  title: String!
+  description: String
+  year: Int!
+  rating: Float!
+  duration: Int!
+  genre: String
+  director: String
+  poster_url: String
+}
+
+input MovieFilter {
+  genre: String
+  min_year: Int
+  max_year: Int
+  min_rating: Float
+  search: String
+}
+
+input ReviewInput {
+  movie_id: ID!
+  user_name: String!
+  rating: Int!
+  comment: String
+}
+
+input ReviewCreateInput {
+  user_name: String!
+  rating: Int!
+  comment: String
+}
+
+input ActorInput {
+  name: String!
+  birth_date: String
+  nationality: String
+  biography: String
+  profile_url: String
+}
+
+input MovieWithDetailsInput {
+  movie: MovieInput!
+  actors: [ActorInput!]
+  reviews: [ReviewCreateInput!]
+}
+
+type Query {
+  # Movie queries
+  movie(id: ID!): Movie
+  movies(page: Int, limit: Int, filter: MovieFilter): MoviesResult!
+  searchMovies(query: String!, page: Int, limit: Int): MoviesResult!
+  
+  # Actor queries
+  actor(id: ID!): Actor
+  
+  # Review queries
+  reviews(movie_id: ID!): [Review!]!
+}
+
+type Mutation {
+  # Movie mutations
+  createMovie(input: MovieInput!): Movie!
+  updateMovie(id: ID!, input: MovieInput!): Movie!
+  deleteMovie(id: ID!): Boolean!
+  
+  # Actor mutations
+  createActor(name: String!, birth_date: String, nationality: String, biography: String, profile_url: String): Actor!
+  
+  # Review mutations
+  createReview(input: ReviewInput!): Review!
+  deleteReview(id: ID!): Boolean!
+  
+  createMovieWithDetails(input: MovieWithDetailsInput!): Movie!
+}
